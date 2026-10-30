@@ -32,5 +32,11 @@ jobs:
 
     steps:
       - name: Deploy to Render
-        run: curl -X POST "${{ secrets.RENDER_DEPLOY_HOOK }}"
-
+        env:
+          RENDER_DEPLOY_HOOK_URL: ${{ secrets.RENDER_DEPLOY_HOOK_URL || secrets.RENDER_DEPLOY_HOOK }}
+        run: |
+          if [ -z "$RENDER_DEPLOY_HOOK_URL" ]; then
+            echo "Render deploy hook secret is not set. Skipping deploy."
+            exit 0
+          fi
+          curl -fsS -X POST "$RENDER_DEPLOY_HOOK_URL"
