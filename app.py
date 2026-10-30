@@ -38,7 +38,6 @@ def get_student(id: int):
     for student in students:
         if student.id == id:
             return student
-
     raise HTTPException(status_code=404, detail="Student not found")
 
 # PUT - Update a student by ID
@@ -58,3 +57,23 @@ def delete_student(id: int):
             students.pop(i)
             return {"message": f"Student with id {id} deleted successfully"}
     raise HTTPException(status_code=404, detail="Student not found")
+
+# ---- Feature: Login ----
+
+# Pydantic Login Model
+class LoginRequest(BaseModel):
+    username: str
+    password: str
+
+# Dummy users for login
+users_db = {
+    "admin": "admin123",
+    "student": "student123"
+}
+
+# POST - Login endpoint
+@app.post("/login")
+def login(request: LoginRequest):
+    if request.username in users_db and users_db[request.username] == request.password:
+        return {"message": "Login successful", "username": request.username}
+    raise HTTPException(status_code=401, detail="Invalid username or password")
