@@ -5,6 +5,12 @@ from typing import List, Optional
 
 app = FastAPI()
 
+
+@app.get("/health")
+def health_check():
+    return {"status": "ok"}
+
+
 # Pydantic Student Model
 class Student(BaseModel):
     id: int
